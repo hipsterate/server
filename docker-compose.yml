@@ -1,0 +1,44 @@
+version: '3'
+
+volumes:
+  flask-python-site-packages: {}
+  flask-python-bin: {}
+
+services:
+  flask:
+    container_name: hipsterate-flask
+    build:
+      context: .
+      dockerfile: Dockerfile-flask
+    command: /app/run-flask.sh
+    ports:
+      - 5000:5000
+    volumes:
+      - ./:/app
+      - flask-python-site-packages:/venv/lib/python3.6/site-packages
+      - flask-python-bin:/venv/bin
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_DEBUG=true
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_DEFAULT_REGION
+
+  mysql:
+    container_name: hipsterate-mysql
+    image: mysql:5.6
+    command: --character-set-server=utf8
+    volumes:
+      - ./mysql:/var/lib/mysql
+    ports:
+      - 43306:3306
+    environment:
+      - MYSQL_DATABASE=hipsterate
+      - MYSQL_USER=local
+      - MYSQL_PASSWORD=local
+      - MYSQL_ROOT_PASSWORD=local
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 3s
+      timeout: 3s
+      retries: 10
