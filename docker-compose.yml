@@ -15,10 +15,10 @@ services:
       - 5000:5000
     volumes:
       - ./:/app
-      - flask-python-site-packages:/venv/lib/python3.6/site-packages
+      - flask-python-site-packages:/venv/lib/python3.7/site-packages
       - flask-python-bin:/venv/bin
     environment:
-      - FLASK_APP=app.py
+      - FLASK_APP=app:app
       - FLASK_DEBUG=true
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
