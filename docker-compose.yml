@@ -19,7 +19,8 @@ services:
       - flask-python-bin:/venv/bin
     environment:
       - FLASK_APP=app:app
-      - FLASK_DEBUG=true
+      - FLASK_ENV=development
+      - ENVIRONMENT=local
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
       - AWS_DEFAULT_REGION
