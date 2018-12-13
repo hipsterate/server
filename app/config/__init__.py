@@ -1,6 +1,6 @@
 class Config:
-    pass
+    TIMEZONE = 'Asia/Seoul'
 
 
 class LocalConfig(Config):
-    MYSQL_URI = 'mysql://mysql:3306@local:local/hipsterate'
+    SQLALCHEMY_DATABASE_URI = 'mysql://local:local@mysql:3306/hipsterate'

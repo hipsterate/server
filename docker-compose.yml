@@ -24,6 +24,12 @@ services:
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
       - AWS_DEFAULT_REGION
+    links:
+      - mysql:mysql
+    depends_on:
+      - mysql
+    stdin_open: true
+    tty: true
 
   mysql:
     container_name: hipsterate-mysql
