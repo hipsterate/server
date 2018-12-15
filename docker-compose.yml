@@ -1,8 +1,8 @@
 version: '3'
 
 volumes:
-  flask-python-site-packages: {}
-  flask-python-bin: {}
+  hipsterate-flask-python-site-packages: {}
+  hipsterate-flask-python-bin: {}
 
 services:
   flask:
@@ -15,8 +15,8 @@ services:
       - 5000:5000
     volumes:
       - ./:/app
-      - flask-python-site-packages:/venv/lib/python3.7/site-packages
-      - flask-python-bin:/venv/bin
+      - hipsterate-flask-python-site-packages:/venv/lib/python3.7/site-packages
+      - hipsterate-flask-python-bin:/venv/bin
     environment:
       - FLASK_APP=app:app
       - FLASK_ENV=development

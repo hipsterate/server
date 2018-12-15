@@ -4,10 +4,8 @@ import pytz
 from sqlalchemy.types import DateTime, TypeDecorator
 from flask_sqlalchemy import SQLAlchemy
 
-from app import app
 
-
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 
 class DateTimeUTC(TypeDecorator):
@@ -36,7 +34,7 @@ class DateTimeUTC(TypeDecorator):
 
     def process_result_value(self, value, dialect):
         if value is not None and value.tzinfo is None:
-            value = value.astimezone(local_tz)
+            value = value.astimezone(self.local_tz)
         return value
 
 
@@ -59,4 +57,5 @@ try:
 except AttributeError:
     utc = UTC()
 
-local_tz = pytz.timezone(app.config['TIMEZONE'])
+
+local_tz = pytz.timezone('Asia/Seoul')
