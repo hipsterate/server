@@ -1,8 +1,9 @@
-import datetime
+from datetime import datetime
 
-import pytz
 from sqlalchemy.types import DateTime, TypeDecorator
 from flask_sqlalchemy import SQLAlchemy
+
+from app.common.util import utc, localtz
 
 
 db = SQLAlchemy()
@@ -25,7 +26,7 @@ class DateTimeUTC(TypeDecorator):
 
     def process_bind_param(self, value, dialect):
         if value is not None:
-            if not isinstance(value, datetime.datetime):
+            if not isinstance(value, datetime):
                 raise TypeError('expected datetime.datetime, not ' +
                                 repr(value))
             elif value.tzinfo is None:
@@ -34,28 +35,5 @@ class DateTimeUTC(TypeDecorator):
 
     def process_result_value(self, value, dialect):
         if value is not None and value.tzinfo is None:
-            value = value.astimezone(self.local_tz)
+            value = value.astimezone(localtz)
         return value
-
-
-class UTC(datetime.tzinfo):
-
-    zero = datetime.timedelta(0)
-
-    def utcoffset(self, _):
-        return self.zero
-
-    def dst(self, _):
-        return self.zero
-
-    def tzname(self, _):
-        return 'UTC'
-
-
-try:
-    utc = datetime.timezone.utc
-except AttributeError:
-    utc = UTC()
-
-
-local_tz = pytz.timezone('Asia/Seoul')
