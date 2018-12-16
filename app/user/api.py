@@ -29,15 +29,24 @@ class SigninAPI(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('email', type=str)
         parser.add_argument('password', type=str)
+        parser.add_argument('provider', type=str)
+        parser.add_argument('access_token', type=str)
         params = parser.parse_args()
 
         user_query = UserQuery()
-        if not user_query.validate_password(params.email, params.password):
-            raise ValueError()
-
-        user = user_query.get_user(email=params.email)
-
         user_command = UserCommand()
-        user_command.signin(user)
+
+        if params.provider is None:
+            if not user_query.validate_password(params.email, params.password):
+                raise ValueError()
+
+            user = user_query.get_user(email=params.email)
+            user_command.signin(user)
+        elif params.provider == 'facebook':
+            if not user_query.validate_facebook_access_token(
+                    params.access_token):
+                raise ValueError()
+        else:
+            raise ValueError()
 
         return {}
