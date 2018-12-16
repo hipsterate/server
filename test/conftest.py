@@ -12,3 +12,8 @@ def flask_app():
     yield app
 
     app_context.pop()
+
+
+@pytest.fixture(scope='session', autouse=True)
+def test_client(flask_app):
+    yield flask_app.test_client()

@@ -1,4 +1,4 @@
-from flask_login import current_user, login_user
+from flask_login import login_user
 
 from app import db
 
@@ -11,5 +11,5 @@ class UserCommand():
         db.session.add(new_user)
         db.session.commit()
 
-    def signin(self, email):
-        login_user(current_user)
+    def signin(self, user):
+        login_user(user)
