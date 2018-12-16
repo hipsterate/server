@@ -18,17 +18,3 @@ class TestUserCommand():
         user = User.query.filter_by(email=email).first()
         assert user is not None
         assert user.email == email
-
-    def test_signin(self, test_client):
-        """ API test for request context """
-
-        email = 'test@email.com'
-        password = '1234'
-
-        result = test_client.post('user/signin', data={
-            'email': email,
-            'password': password,
-        })
-
-        assert result.headers.get('Set-Cookie') is not None
-        assert 'session' in result.headers['Set-Cookie']
