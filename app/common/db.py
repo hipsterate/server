@@ -1,4 +1,5 @@
 from datetime import datetime
+from contextlib import contextmanager
 
 from sqlalchemy.types import DateTime, TypeDecorator
 from flask_sqlalchemy import SQLAlchemy
@@ -7,6 +8,22 @@ from app.common.util import utc, localtz
 
 
 db = SQLAlchemy()
+
+
+class TX():
+    @classmethod
+    @contextmanager
+    def get(cls):
+        session = db.session
+
+        try:
+            yield session
+        except Exception:
+            session.rollback()
+        else:
+            session.commit()
+        finally:
+            session.remove()
 
 
 class DateTimeUTC(TypeDecorator):

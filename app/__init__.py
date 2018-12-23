@@ -1,7 +1,6 @@
-import os
-
 from flask import Flask
 
+from app.config import get_config_obj
 from app.common.auth import login_manager
 from app.common.db import db
 from app.user.api import blueprint as user_blueprint
@@ -9,14 +8,7 @@ from app.user.api import blueprint as user_blueprint
 
 def create_app():
     app = Flask(__name__)
-
-    config_obj = None
-    env = os.environ.get('ENVIRONMENT', 'local')
-    if env == 'local':
-        config_obj = 'app.config.LocalConfig'
-
-    if config_obj is not None:
-        app.config.from_object(config_obj)
+    app.config.from_object(get_config_obj())
 
     register_extension(app)
     register_blueprint(app)

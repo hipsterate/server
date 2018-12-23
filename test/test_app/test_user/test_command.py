@@ -3,8 +3,10 @@ import pytest
 from app.user.command import UserCommand
 from app.user.model import User
 
+from test.test_app import DBTC
 
-class TestUserCommand():
+
+class TestUserCommand(DBTC):
     @pytest.fixture(scope='function', autouse=True)
     def setUp(self):
         self.command = UserCommand()
