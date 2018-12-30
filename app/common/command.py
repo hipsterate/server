@@ -7,7 +7,8 @@ from app.common.db import TX
 class Command():
     def __getattribute__(self, name):
         attr = object.__getattribute__(self, name)
-        if not isinstance(attr, types.MethodType):
+        if (not isinstance(attr, types.MethodType)
+                or name in ('insert',)):
             return super().__getattribute__(name)
 
         @functools.wraps(attr)

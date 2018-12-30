@@ -21,3 +21,6 @@ class DBTC():
 
         db.session.rollback()
         db.session.remove()
+
+    def insert(self, obj):
+        db.session.add(obj)
