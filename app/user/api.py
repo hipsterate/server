@@ -10,15 +10,22 @@ api = Api(blueprint)
 
 
 @api.route('/signup')
-class SignupAPI(Resource):
+class Signup(Resource):
     def post(self):
         parser = reqparse.RequestParser()
+        parser.add_argument('name', type=str, required=True)
         parser.add_argument('email', type=str)
         parser.add_argument('password', type=str)
+        parser.add_argument('social_provider', type=str)
+        parser.add_argument('social_id', type=str)
+        parser.add_argument('social_access_token', type=str)
         params = parser.parse_args()
 
         user_command = UserCommand()
-        user_command.signup(**params)
+        if params.social_provider is None:
+            user_command.signup(**params)
+        else:
+            user_command.social_signup(**params)
 
         return {}
 
