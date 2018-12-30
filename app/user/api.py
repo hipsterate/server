@@ -1,5 +1,6 @@
 from flask import Blueprint
 from flask_restplus import Api, Resource, reqparse
+from flask_login import login_user
 
 from app.user.command import UserCommand
 from app.user.query import UserQuery
@@ -31,29 +32,27 @@ class Signup(Resource):
 
 
 @api.route('/signin')
-class SigninAPI(Resource):
+class Signin(Resource):
     def post(self):
         parser = reqparse.RequestParser()
+        parser.add_argument('name', type=str)
         parser.add_argument('email', type=str)
         parser.add_argument('password', type=str)
-        parser.add_argument('provider', type=str)
-        parser.add_argument('access_token', type=str)
+        parser.add_argument('social_provider', type=str)
+        parser.add_argument('social_id', type=str)
+        parser.add_argument('social_access_token', type=str)
         params = parser.parse_args()
 
         user_query = UserQuery()
-        user_command = UserCommand()
 
         if params.provider is None:
-            if not user_query.validate_password(params.email, params.password):
-                raise ValueError()
-
-            user = user_query.get_user(email=params.email)
-            user_command.signin(user)
-        elif params.provider == 'facebook':
-            if not user_query.validate_facebook_access_token(
-                    params.access_token):
-                raise ValueError()
+            user = user_query.validate_password(
+                    params.name, params.email, params.password)
         else:
-            raise ValueError()
+            user = user_query.validate_social_access_token(
+                    params.social_provider, params.social_id,
+                    params.social_access_token)
+
+        login_user(user)
 
         return {}
