@@ -14,3 +14,16 @@ class User(db.Model, UserMixin):
         DateTimeUTC, nullable=False, default=utcnow)
     update_time = db.Column(
         DateTimeUTC, nullable=False, default=utcnow, onupdate=utcnow)
+
+
+class UserSocial(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    social_provider = db.Column(db.String(80), unique=True)
+    social_id = db.Column(db.String(80), unique=True)
+    create_time = db.Column(
+        DateTimeUTC, nullable=False, default=utcnow)
+    update_time = db.Column(
+        DateTimeUTC, nullable=False, default=utcnow, onupdate=utcnow)
+
+    user = db.relationship('User')
