@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask_restplus import Api, Resource, reqparse
-from flask_login import login_user
+from flask_login import login_user, current_user, login_required
 
 from app.user.command import UserCommand
 from app.user.query import UserQuery
@@ -47,7 +47,7 @@ class Signin(Resource):
 
         user_query = UserQuery()
 
-        if params.provider is None:
+        if params.social_provider is None:
             user = user_query.validate_password(
                     params.name, params.email, params.password)
         else:
@@ -56,5 +56,19 @@ class Signin(Resource):
                     params.social_access_token)
 
         login_user(user)
+
+        return {}
+
+
+@api.route('/connectlastfm')
+class ConnectLastFM(Resource):
+    @login_required
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('token', type=str, required=True)
+        params = parser.parse_args()
+
+        user_command = UserCommand()
+        user_command.connect_lastfm(current_user.id, params.token)
 
         return {}
