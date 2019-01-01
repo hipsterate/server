@@ -1,11 +1,19 @@
 import os
+import configparser
+
+
+secret = configparser.ConfigParser()
+secret_path = '/app/app/config/secret.yml'
+if not os.path.exists(secret_path):
+    raise FileNotFoundError(secret_path)
+secret.read(secret_path)
 
 
 class Config:
     TIMEZONE = 'Asia/Seoul'
 
-    FACEBOOK_APP_ID = 2119931328023450
-    FACEBOOK_APP_SECRET = 'be9c9bb5c7c5402b5e8045f0746c2a45'
+    FACEBOOK_APP_ID = secret.get('default', 'fb_app_id')
+    FACEBOOK_APP_SECRET = secret.get('default', 'app_secret')
 
 
 class TestConfig(Config):

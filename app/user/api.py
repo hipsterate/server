@@ -24,9 +24,11 @@ class Signup(Resource):
 
         user_command = UserCommand()
         if params.social_provider is None:
-            user_command.signup(**params)
+            user_command.signup(params.name, params.email, params.password)
         else:
-            user_command.social_signup(**params)
+            user_command.social_signup(
+                    params.social_provider, params.social_id,
+                    params.social_access_token)
 
         return {}
 
