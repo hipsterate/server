@@ -1,10 +1,22 @@
+from flask_sqlalchemy import BaseQuery
 from flask_login import UserMixin
 
 from app.common.db import db, DateTimeUTC
 from app.common.util import utcnow
 
 
+class UserQuery(BaseQuery):
+    def update_lastfm_name(self, user_id, lastfm_name):
+        return self.filter(
+            User.id == user_id,
+        ).update({
+            'lastfm_name': lastfm_name,
+        })
+
+
 class User(db.Model, UserMixin):
+    query_class = UserQuery
+
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(100))
