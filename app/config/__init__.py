@@ -3,7 +3,7 @@ import configparser
 
 
 secret = configparser.ConfigParser()
-secret_path = '/app/app/config/secret.yml'
+secret_path = '/app/app/config/secret.ini'
 if not os.path.exists(secret_path):
     raise FileNotFoundError(secret_path)
 secret.read(secret_path)
