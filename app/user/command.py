@@ -7,6 +7,9 @@ from .error import NotSupportedProviderError
 
 class UserCommand(Command):
     def signup(self, name, email, password):
+        if not name or not password:
+            raise ValueError('name, password are required')
+
         new_user = User(name=name, email=email, password=password)
         self.insert(new_user)
 

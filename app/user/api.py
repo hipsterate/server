@@ -1,9 +1,10 @@
 from flask import Blueprint
-from flask_restplus import Api, Resource, reqparse
+from flask_restplus import Api, Resource
 from flask_login import login_user, current_user, login_required
 
-from app.user.command import UserCommand
-from app.user.query import UserQuery
+from .reqparse import signup_parser, connect_lastfm_parser
+from .command import UserCommand
+from .query import UserQuery
 
 
 blueprint = Blueprint('user', __name__)
@@ -12,15 +13,9 @@ api = Api(blueprint)
 
 @api.route('/signup')
 class Signup(Resource):
+    @api.expect(signup_parser())
     def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('name', type=str, required=True)
-        parser.add_argument('email', type=str)
-        parser.add_argument('password', type=str)
-        parser.add_argument('social_provider', type=str)
-        parser.add_argument('social_id', type=str)
-        parser.add_argument('social_access_token', type=str)
-        params = parser.parse_args()
+        params = signup_parser().parse_args()
 
         user_command = UserCommand()
         if params.social_provider is None:
@@ -35,18 +30,11 @@ class Signup(Resource):
 
 @api.route('/signin')
 class Signin(Resource):
+    @api.expect(signup_parser())
     def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('name', type=str)
-        parser.add_argument('email', type=str)
-        parser.add_argument('password', type=str)
-        parser.add_argument('social_provider', type=str)
-        parser.add_argument('social_id', type=str)
-        parser.add_argument('social_access_token', type=str)
-        params = parser.parse_args()
+        params = signup_parser().parse_args()
 
         user_query = UserQuery()
-
         if params.social_provider is None:
             user = user_query.validate_password(
                     params.name, params.email, params.password)
@@ -62,11 +50,10 @@ class Signin(Resource):
 
 @api.route('/connectlastfm')
 class ConnectLastFM(Resource):
+    @api.expect(connect_lastfm_parser())
     @login_required
     def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('token', type=str, required=True)
-        params = parser.parse_args()
+        params = connect_lastfm_parser.parse_args()
 
         user_command = UserCommand()
         user_command.connect_lastfm(current_user.id, params.token)
