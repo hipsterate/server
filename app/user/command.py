@@ -3,6 +3,7 @@ from app.common.external import Facebook, LastFM
 
 from .model import User, UserSocial
 from .error import NotSupportedProviderError
+from .enum import SocialProvider
 
 
 class UserCommand(Command):
@@ -14,7 +15,7 @@ class UserCommand(Command):
         self.insert(new_user)
 
     def social_signup(self, provider, id_, access_token):
-        if provider == 'facebook':
+        if provider is SocialProvider.FACEBOOK:
             fetched = Facebook.get_user(id_, access_token)
         else:
             raise NotSupportedProviderError(provider)

@@ -56,6 +56,6 @@ class ConnectLastFM(Resource):
         params = connect_lastfm_parser.parse_args()
 
         user_command = UserCommand()
-        user_command.connect_lastfm(current_user.id, params.token)
+        user_command.connect_lastfm(current_user.id, params.access_token)
 
         return {}

@@ -5,6 +5,7 @@ from .model import User, UserSocial
 from .error import (
     ValidatePasswordError, ValidateAccessTokenError, NotSupportedProviderError,
 )
+from .enum import SocialProvider
 
 
 class UserQuery():
@@ -19,7 +20,7 @@ class UserQuery():
         return user
 
     def get_user_by_provider(self, provider, social_id):
-        if provider == 'facebook':
+        if provider is SocialProvider.FACEBOOK:
             user = User.query.join(
                 UserSocial, UserSocial.user_id == User.id,
             ).filter(
@@ -41,7 +42,7 @@ class UserQuery():
         return user
 
     def validate_social_access_token(self, provider, id_, access_token):
-        if provider == 'facebook':
+        if provider is SocialProvider.FACEBOOK:
             try:
                 Facebook.get_user(id_, access_token)
             except ExternalAPIFailError:
